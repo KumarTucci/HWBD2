@@ -1,0 +1,882 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.4.1
+-- Dumped by pg_dump version 9.4.1
+-- Started on 2016-03-30 10:08:16 CEST
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+
+--
+-- TOC entry 8 (class 2615 OID 36109)
+-- Name: AVA; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA "AVA";
+
+
+ALTER SCHEMA "AVA" OWNER TO postgres;
+
+SET search_path = "AVA", pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 182 (class 1259 OID 36123)
+-- Name: anno_accademico; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE anno_accademico (
+    nome_anno_x text,
+    k_anno_accademico integer NOT NULL,
+    codice_anno text,
+    "nome_anno_x-1" text,
+    "nome_anno_x-1/x" text
+);
+
+
+ALTER TABLE anno_accademico OWNER TO postgres;
+
+--
+-- TOC entry 181 (class 1259 OID 36121)
+-- Name: anno_accademico_k_anno_accademico_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE anno_accademico_k_anno_accademico_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE anno_accademico_k_anno_accademico_seq OWNER TO postgres;
+
+--
+-- TOC entry 2409 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: anno_accademico_k_anno_accademico_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE anno_accademico_k_anno_accademico_seq OWNED BY anno_accademico.k_anno_accademico;
+
+
+--
+-- TOC entry 188 (class 1259 OID 36167)
+-- Name: corso; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE corso (
+    nome_corso text,
+    numero_crediti_corso numeric,
+    ssd text,
+    codice_corso text,
+    k_corso integer NOT NULL
+);
+
+
+ALTER TABLE corso OWNER TO postgres;
+
+--
+-- TOC entry 187 (class 1259 OID 36165)
+-- Name: corso_k_corso_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE corso_k_corso_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE corso_k_corso_seq OWNER TO postgres;
+
+--
+-- TOC entry 2410 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: corso_k_corso_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE corso_k_corso_seq OWNED BY corso.k_corso;
+
+
+--
+-- TOC entry 184 (class 1259 OID 36134)
+-- Name: corso_studi; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE corso_studi (
+    data_inizio_validita text,
+    data_fine_validita text,
+    codice_dipartimento text,
+    numero_programmato numeric,
+    durata_legale text,
+    ha_numero_programmato numeric,
+    nome_dipartimento text,
+    codice_ateneo text,
+    k_corso_studi integer NOT NULL,
+    nome_cds text,
+    tipo_cds text,
+    codice_corso_di_studi text
+);
+
+
+ALTER TABLE corso_studi OWNER TO postgres;
+
+--
+-- TOC entry 183 (class 1259 OID 36132)
+-- Name: corso_studi_k_corso_studi_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE corso_studi_k_corso_studi_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE corso_studi_k_corso_studi_seq OWNER TO postgres;
+
+--
+-- TOC entry 2411 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: corso_studi_k_corso_studi_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE corso_studi_k_corso_studi_seq OWNED BY corso_studi.k_corso_studi;
+
+
+--
+-- TOC entry 190 (class 1259 OID 36209)
+-- Name: esami; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE esami (
+    k_studente integer NOT NULL,
+    k_anno_accademico integer NOT NULL,
+    k_corso_studi integer NOT NULL,
+    k_corso integer NOT NULL,
+    k_tempo integer NOT NULL,
+    voto_esame numeric,
+    cfu_esame numeric
+);
+
+
+ALTER TABLE esami OWNER TO postgres;
+
+--
+-- TOC entry 189 (class 1259 OID 36176)
+-- Name: ingressi; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE ingressi (
+    k_studente integer NOT NULL,
+    k_anno_accademico integer NOT NULL,
+    k_corso_studi integer NOT NULL,
+    k_tipo_immatricolazione integer NOT NULL,
+    k_tempo integer NOT NULL,
+    punteggio_test numeric,
+    immatricolato text
+);
+
+
+ALTER TABLE ingressi OWNER TO postgres;
+
+--
+-- TOC entry 191 (class 1259 OID 36243)
+-- Name: lauree; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE lauree (
+    k_studente integer NOT NULL,
+    k_anno_accademico integer NOT NULL,
+    k_corso_studi integer NOT NULL,
+    k_tempo integer NOT NULL,
+    voto_laurea numeric
+);
+
+
+ALTER TABLE lauree OWNER TO postgres;
+
+--
+-- TOC entry 180 (class 1259 OID 36112)
+-- Name: studente; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE studente (
+    cf text,
+    data_di_nascita text,
+    coorte numeric,
+    k_studente integer NOT NULL,
+    titolo_di_studio text,
+    sesso text,
+    regione_residenza text,
+    provincia_residenza text,
+    comune_residenza text,
+    stato_residenza text,
+    cittadinanza text,
+    voto_scuola_media_superiore text,
+    nazione_diploma text,
+    tipo_scuola_media_superiore text,
+    istituto_scuola_media_superiore text,
+    anno_solare_coseguimento_titolo_scuola_media_superiore numeric
+);
+
+
+ALTER TABLE studente OWNER TO postgres;
+
+--
+-- TOC entry 179 (class 1259 OID 36110)
+-- Name: studente_k_studente_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE studente_k_studente_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE studente_k_studente_seq OWNER TO postgres;
+
+--
+-- TOC entry 2412 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: studente_k_studente_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE studente_k_studente_seq OWNED BY studente.k_studente;
+
+
+--
+-- TOC entry 186 (class 1259 OID 36153)
+-- Name: tempo; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tempo (
+    anno numeric,
+    mese numeric,
+    giorno numeric,
+    k_tempo integer NOT NULL
+);
+
+
+ALTER TABLE tempo OWNER TO postgres;
+
+--
+-- TOC entry 185 (class 1259 OID 36151)
+-- Name: tempo_k_tempo_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE tempo_k_tempo_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tempo_k_tempo_seq OWNER TO postgres;
+
+--
+-- TOC entry 2413 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: tempo_k_tempo_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE tempo_k_tempo_seq OWNED BY tempo.k_tempo;
+
+
+--
+-- TOC entry 197 (class 1259 OID 36295)
+-- Name: tipo_immatricolazione; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tipo_immatricolazione (
+    tipo_immatricolazione text,
+    k_tipo_immatricolazione integer NOT NULL
+);
+
+
+ALTER TABLE tipo_immatricolazione OWNER TO postgres;
+
+--
+-- TOC entry 196 (class 1259 OID 36293)
+-- Name: tipo_immatricolazione_k_tipo_immatricolazione_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE tipo_immatricolazione_k_tipo_immatricolazione_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tipo_immatricolazione_k_tipo_immatricolazione_seq OWNER TO postgres;
+
+--
+-- TOC entry 2414 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: tipo_immatricolazione_k_tipo_immatricolazione_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE tipo_immatricolazione_k_tipo_immatricolazione_seq OWNED BY tipo_immatricolazione.k_tipo_immatricolazione;
+
+
+--
+-- TOC entry 193 (class 1259 OID 36273)
+-- Name: tipo_iscrizione; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tipo_iscrizione (
+    numero_anni_fuori_corso numeric,
+    "in_corso/fuori_corso" text,
+    anno_corso numeric,
+    k_tipo_iscrizione integer NOT NULL
+);
+
+
+ALTER TABLE tipo_iscrizione OWNER TO postgres;
+
+--
+-- TOC entry 192 (class 1259 OID 36271)
+-- Name: tipo_iscrizione_k_tipo_iscrizione_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE tipo_iscrizione_k_tipo_iscrizione_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tipo_iscrizione_k_tipo_iscrizione_seq OWNER TO postgres;
+
+--
+-- TOC entry 2415 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: tipo_iscrizione_k_tipo_iscrizione_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE tipo_iscrizione_k_tipo_iscrizione_seq OWNED BY tipo_iscrizione.k_tipo_iscrizione;
+
+
+--
+-- TOC entry 195 (class 1259 OID 36284)
+-- Name: tipo_uscita; Type: TABLE; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+CREATE TABLE tipo_uscita (
+    k_tipo_uscita integer NOT NULL,
+    tipo_uscita text
+);
+
+
+ALTER TABLE tipo_uscita OWNER TO postgres;
+
+--
+-- TOC entry 194 (class 1259 OID 36282)
+-- Name: tipo_uscita_k_tipo_uscita_seq; Type: SEQUENCE; Schema: AVA; Owner: postgres
+--
+
+CREATE SEQUENCE tipo_uscita_k_tipo_uscita_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tipo_uscita_k_tipo_uscita_seq OWNER TO postgres;
+
+--
+-- TOC entry 2416 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: tipo_uscita_k_tipo_uscita_seq; Type: SEQUENCE OWNED BY; Schema: AVA; Owner: postgres
+--
+
+ALTER SEQUENCE tipo_uscita_k_tipo_uscita_seq OWNED BY tipo_uscita.k_tipo_uscita;
+
+
+--
+-- TOC entry 2235 (class 2604 OID 36126)
+-- Name: k_anno_accademico; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY anno_accademico ALTER COLUMN k_anno_accademico SET DEFAULT nextval('anno_accademico_k_anno_accademico_seq'::regclass);
+
+
+--
+-- TOC entry 2238 (class 2604 OID 36170)
+-- Name: k_corso; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY corso ALTER COLUMN k_corso SET DEFAULT nextval('corso_k_corso_seq'::regclass);
+
+
+--
+-- TOC entry 2236 (class 2604 OID 36137)
+-- Name: k_corso_studi; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY corso_studi ALTER COLUMN k_corso_studi SET DEFAULT nextval('corso_studi_k_corso_studi_seq'::regclass);
+
+
+--
+-- TOC entry 2234 (class 2604 OID 36115)
+-- Name: k_studente; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY studente ALTER COLUMN k_studente SET DEFAULT nextval('studente_k_studente_seq'::regclass);
+
+
+--
+-- TOC entry 2237 (class 2604 OID 36156)
+-- Name: k_tempo; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY tempo ALTER COLUMN k_tempo SET DEFAULT nextval('tempo_k_tempo_seq'::regclass);
+
+
+--
+-- TOC entry 2241 (class 2604 OID 36298)
+-- Name: k_tipo_immatricolazione; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY tipo_immatricolazione ALTER COLUMN k_tipo_immatricolazione SET DEFAULT nextval('tipo_immatricolazione_k_tipo_immatricolazione_seq'::regclass);
+
+
+--
+-- TOC entry 2239 (class 2604 OID 36276)
+-- Name: k_tipo_iscrizione; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY tipo_iscrizione ALTER COLUMN k_tipo_iscrizione SET DEFAULT nextval('tipo_iscrizione_k_tipo_iscrizione_seq'::regclass);
+
+
+--
+-- TOC entry 2240 (class 2604 OID 36287)
+-- Name: k_tipo_uscita; Type: DEFAULT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY tipo_uscita ALTER COLUMN k_tipo_uscita SET DEFAULT nextval('tipo_uscita_k_tipo_uscita_seq'::regclass);
+
+
+--
+-- TOC entry 2389 (class 0 OID 36123)
+-- Dependencies: 182
+-- Data for Name: anno_accademico; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY anno_accademico (nome_anno_x, k_anno_accademico, codice_anno, "nome_anno_x-1", "nome_anno_x-1/x") FROM stdin;
+\.
+
+
+--
+-- TOC entry 2417 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: anno_accademico_k_anno_accademico_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('anno_accademico_k_anno_accademico_seq', 1, false);
+
+
+--
+-- TOC entry 2395 (class 0 OID 36167)
+-- Dependencies: 188
+-- Data for Name: corso; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY corso (nome_corso, numero_crediti_corso, ssd, codice_corso, k_corso) FROM stdin;
+df	123	das	qwe	33
+\.
+
+
+--
+-- TOC entry 2418 (class 0 OID 0)
+-- Dependencies: 187
+-- Name: corso_k_corso_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('corso_k_corso_seq', 1, false);
+
+
+--
+-- TOC entry 2391 (class 0 OID 36134)
+-- Dependencies: 184
+-- Data for Name: corso_studi; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY corso_studi (data_inizio_validita, data_fine_validita, codice_dipartimento, numero_programmato, durata_legale, ha_numero_programmato, nome_dipartimento, codice_ateneo, k_corso_studi, nome_cds, tipo_cds, codice_corso_di_studi) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2419 (class 0 OID 0)
+-- Dependencies: 183
+-- Name: corso_studi_k_corso_studi_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('corso_studi_k_corso_studi_seq', 1, false);
+
+
+--
+-- TOC entry 2397 (class 0 OID 36209)
+-- Dependencies: 190
+-- Data for Name: esami; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY esami (k_studente, k_anno_accademico, k_corso_studi, k_corso, k_tempo, voto_esame, cfu_esame) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2396 (class 0 OID 36176)
+-- Dependencies: 189
+-- Data for Name: ingressi; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY ingressi (k_studente, k_anno_accademico, k_corso_studi, k_tipo_immatricolazione, k_tempo, punteggio_test, immatricolato) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2398 (class 0 OID 36243)
+-- Dependencies: 191
+-- Data for Name: lauree; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY lauree (k_studente, k_anno_accademico, k_corso_studi, k_tempo, voto_laurea) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2387 (class 0 OID 36112)
+-- Dependencies: 180
+-- Data for Name: studente; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY studente (cf, data_di_nascita, coorte, k_studente, titolo_di_studio, sesso, regione_residenza, provincia_residenza, comune_residenza, stato_residenza, cittadinanza, voto_scuola_media_superiore, nazione_diploma, tipo_scuola_media_superiore, istituto_scuola_media_superiore, anno_solare_coseguimento_titolo_scuola_media_superiore) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2420 (class 0 OID 0)
+-- Dependencies: 179
+-- Name: studente_k_studente_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('studente_k_studente_seq', 1, false);
+
+
+--
+-- TOC entry 2393 (class 0 OID 36153)
+-- Dependencies: 186
+-- Data for Name: tempo; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY tempo (anno, mese, giorno, k_tempo) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2421 (class 0 OID 0)
+-- Dependencies: 185
+-- Name: tempo_k_tempo_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tempo_k_tempo_seq', 1, true);
+
+
+--
+-- TOC entry 2404 (class 0 OID 36295)
+-- Dependencies: 197
+-- Data for Name: tipo_immatricolazione; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY tipo_immatricolazione (tipo_immatricolazione, k_tipo_immatricolazione) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2422 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: tipo_immatricolazione_k_tipo_immatricolazione_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tipo_immatricolazione_k_tipo_immatricolazione_seq', 1, false);
+
+
+--
+-- TOC entry 2400 (class 0 OID 36273)
+-- Dependencies: 193
+-- Data for Name: tipo_iscrizione; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY tipo_iscrizione (numero_anni_fuori_corso, "in_corso/fuori_corso", anno_corso, k_tipo_iscrizione) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2423 (class 0 OID 0)
+-- Dependencies: 192
+-- Name: tipo_iscrizione_k_tipo_iscrizione_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tipo_iscrizione_k_tipo_iscrizione_seq', 1, false);
+
+
+--
+-- TOC entry 2402 (class 0 OID 36284)
+-- Dependencies: 195
+-- Data for Name: tipo_uscita; Type: TABLE DATA; Schema: AVA; Owner: postgres
+--
+
+COPY tipo_uscita (k_tipo_uscita, tipo_uscita) FROM stdin;
+\.
+
+
+--
+-- TOC entry 2424 (class 0 OID 0)
+-- Dependencies: 194
+-- Name: tipo_uscita_k_tipo_uscita_seq; Type: SEQUENCE SET; Schema: AVA; Owner: postgres
+--
+
+SELECT pg_catalog.setval('tipo_uscita_k_tipo_uscita_seq', 1, false);
+
+
+--
+-- TOC entry 2245 (class 2606 OID 36131)
+-- Name: anno_accademico_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY anno_accademico
+    ADD CONSTRAINT anno_accademico_pkey PRIMARY KEY (k_anno_accademico);
+
+
+--
+-- TOC entry 2251 (class 2606 OID 36175)
+-- Name: corso_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY corso
+    ADD CONSTRAINT corso_pkey PRIMARY KEY (k_corso);
+
+
+--
+-- TOC entry 2247 (class 2606 OID 36142)
+-- Name: corso_studi_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY corso_studi
+    ADD CONSTRAINT corso_studi_pkey PRIMARY KEY (k_corso_studi);
+
+
+--
+-- TOC entry 2255 (class 2606 OID 36216)
+-- Name: esami_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY esami
+    ADD CONSTRAINT esami_pkey PRIMARY KEY (k_studente, k_anno_accademico, k_corso_studi, k_corso, k_tempo);
+
+
+--
+-- TOC entry 2253 (class 2606 OID 36183)
+-- Name: ingressi_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY ingressi
+    ADD CONSTRAINT ingressi_pkey PRIMARY KEY (k_studente, k_anno_accademico, k_corso_studi, k_tipo_immatricolazione, k_tempo);
+
+
+--
+-- TOC entry 2257 (class 2606 OID 36250)
+-- Name: lauree_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY lauree
+    ADD CONSTRAINT lauree_pkey PRIMARY KEY (k_studente, k_anno_accademico, k_corso_studi, k_tempo);
+
+
+--
+-- TOC entry 2243 (class 2606 OID 36120)
+-- Name: studente_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY studente
+    ADD CONSTRAINT studente_pkey PRIMARY KEY (k_studente);
+
+
+--
+-- TOC entry 2249 (class 2606 OID 36161)
+-- Name: tempo_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tempo
+    ADD CONSTRAINT tempo_pkey PRIMARY KEY (k_tempo);
+
+
+--
+-- TOC entry 2263 (class 2606 OID 36303)
+-- Name: tipo_immatricolazione_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tipo_immatricolazione
+    ADD CONSTRAINT tipo_immatricolazione_pkey PRIMARY KEY (k_tipo_immatricolazione);
+
+
+--
+-- TOC entry 2259 (class 2606 OID 36281)
+-- Name: tipo_iscrizione_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tipo_iscrizione
+    ADD CONSTRAINT tipo_iscrizione_pkey PRIMARY KEY (k_tipo_iscrizione);
+
+
+--
+-- TOC entry 2261 (class 2606 OID 36292)
+-- Name: tipo_uscita_pkey; Type: CONSTRAINT; Schema: AVA; Owner: postgres; Tablespace: 
+--
+
+ALTER TABLE ONLY tipo_uscita
+    ADD CONSTRAINT tipo_uscita_pkey PRIMARY KEY (k_tipo_uscita);
+
+
+--
+-- TOC entry 2268 (class 2606 OID 36217)
+-- Name: esami_k_anno_accademico_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY esami
+    ADD CONSTRAINT esami_k_anno_accademico_fkey FOREIGN KEY (k_anno_accademico) REFERENCES anno_accademico(k_anno_accademico);
+
+
+--
+-- TOC entry 2269 (class 2606 OID 36222)
+-- Name: esami_k_corso_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY esami
+    ADD CONSTRAINT esami_k_corso_fkey FOREIGN KEY (k_corso) REFERENCES corso(k_corso);
+
+
+--
+-- TOC entry 2270 (class 2606 OID 36227)
+-- Name: esami_k_corso_studi_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY esami
+    ADD CONSTRAINT esami_k_corso_studi_fkey FOREIGN KEY (k_corso_studi) REFERENCES corso_studi(k_corso_studi);
+
+
+--
+-- TOC entry 2271 (class 2606 OID 36232)
+-- Name: esami_k_studente_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY esami
+    ADD CONSTRAINT esami_k_studente_fkey FOREIGN KEY (k_studente) REFERENCES studente(k_studente);
+
+
+--
+-- TOC entry 2272 (class 2606 OID 36237)
+-- Name: esami_k_tempo_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY esami
+    ADD CONSTRAINT esami_k_tempo_fkey FOREIGN KEY (k_tempo) REFERENCES tempo(k_tempo);
+
+
+--
+-- TOC entry 2265 (class 2606 OID 36189)
+-- Name: ingressi_k_anno_accademico_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY ingressi
+    ADD CONSTRAINT ingressi_k_anno_accademico_fkey FOREIGN KEY (k_anno_accademico) REFERENCES anno_accademico(k_anno_accademico);
+
+
+--
+-- TOC entry 2266 (class 2606 OID 36194)
+-- Name: ingressi_k_corso_studi_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY ingressi
+    ADD CONSTRAINT ingressi_k_corso_studi_fkey FOREIGN KEY (k_corso_studi) REFERENCES corso_studi(k_corso_studi);
+
+
+--
+-- TOC entry 2264 (class 2606 OID 36184)
+-- Name: ingressi_k_studente_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY ingressi
+    ADD CONSTRAINT ingressi_k_studente_fkey FOREIGN KEY (k_studente) REFERENCES studente(k_studente);
+
+
+--
+-- TOC entry 2267 (class 2606 OID 36204)
+-- Name: ingressi_k_tempo_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY ingressi
+    ADD CONSTRAINT ingressi_k_tempo_fkey FOREIGN KEY (k_tempo) REFERENCES tempo(k_tempo);
+
+
+--
+-- TOC entry 2274 (class 2606 OID 36256)
+-- Name: lauree_k_anno_accademico_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY lauree
+    ADD CONSTRAINT lauree_k_anno_accademico_fkey FOREIGN KEY (k_anno_accademico) REFERENCES anno_accademico(k_anno_accademico);
+
+
+--
+-- TOC entry 2275 (class 2606 OID 36261)
+-- Name: lauree_k_corso_studi_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY lauree
+    ADD CONSTRAINT lauree_k_corso_studi_fkey FOREIGN KEY (k_corso_studi) REFERENCES corso_studi(k_corso_studi);
+
+
+--
+-- TOC entry 2273 (class 2606 OID 36251)
+-- Name: lauree_k_studente_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY lauree
+    ADD CONSTRAINT lauree_k_studente_fkey FOREIGN KEY (k_studente) REFERENCES studente(k_studente);
+
+
+--
+-- TOC entry 2276 (class 2606 OID 36266)
+-- Name: lauree_k_tempo_fkey; Type: FK CONSTRAINT; Schema: AVA; Owner: postgres
+--
+
+ALTER TABLE ONLY lauree
+    ADD CONSTRAINT lauree_k_tempo_fkey FOREIGN KEY (k_tempo) REFERENCES tempo(k_tempo);
+
+
+-- Completed on 2016-03-30 10:08:17 CEST
+
+--
+-- PostgreSQL database dump complete
+--
+
